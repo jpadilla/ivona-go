@@ -34,7 +34,7 @@ func (client *Ivona) CreateSpeech(options SpeechOptions) (*SpeechResponse, error
 		return nil, err
 	}
 
-	r, _ := http.NewRequest("POST", CreateSpeechAPI, bytes.NewReader(b))
+	r, _ := http.NewRequest("POST", createSpeechAPI, bytes.NewReader(b))
 	r.Header.Set("Content-Type", "application/json")
 
 	awsClient := aws4.Client{Keys: &aws4.Keys{
