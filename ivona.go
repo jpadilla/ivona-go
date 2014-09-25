@@ -1,32 +1,32 @@
 package ivona
 
 import (
-	"encoding/json"
-	// "fmt"
-	"github.com/bmizerany/aws4"
-	// "io"
-	// "log"
-	"net/http"
-	// "os"
-	// "strings"
 	"bytes"
+	"encoding/json"
+	"fmt"
+	"github.com/bmizerany/aws4"
 	"io/ioutil"
+	"net/http"
 )
 
-const (
-	IvonaAPI        = "https://tts.eu-west-1.ivonacloud.com"
-	CreateSpeechAPI = IvonaAPI + "/CreateSpeech"
-)
+// ivonaAPI is the public API IVONA Speech Cloud URL.
+const ivonaAPI = "https://tts.eu-west-1.ivonacloud.com"
 
+// createSpeechAPI is the public API IVONA Speech Cloud URL for the CreateSpeech action.
+const createSpeechAPI = ivonaAPI + "/CreateSpeech"
+
+// Ivona is used to invoke API calls
 type Ivona struct {
 	AccessKey string
 	SecretKey string
 }
 
+// New returns a new Ivona client.
 func New(accessKey string, secretKey string) *Ivona {
 	return &Ivona{AccessKey: accessKey, SecretKey: secretKey}
 }
 
+// CreateSpeech performs a synthesis of the requested text and returns the audio stream containing the speech.
 func (client *Ivona) CreateSpeech(options SpeechOptions) (*SpeechResponse, error) {
 	b, err := json.Marshal(options)
 
@@ -56,39 +56,13 @@ func (client *Ivona) CreateSpeech(options SpeechOptions) (*SpeechResponse, error
 		return nil, err
 	}
 
+	if resp.StatusCode != 200 {
+		return nil, fmt.Errorf("Got non 200 status code: %s %q", resp.Status, data)
+	}
+
 	return &SpeechResponse{
 		Audio:       data,
-		RequestId:   resp.Header["X-Amzn-Ivonattsrequestid"][0],
+		RequestID:   resp.Header["X-Amzn-Ivonattsrequestid"][0],
 		ContentType: resp.Header["Content-Type"][0],
 	}, nil
 }
-
-// func main() {
-// 	r, _ := http.NewRequest("POST", "https://tts.eu-west-1.ivonacloud.com/CreateSpeech", data)
-// 	r.Header.Set("Content-Type", "application/json")
-
-// 	Client := aws4.Client{Keys: &aws4.Keys{
-// 		AccessKey: "GDNAI77EX24OLG2PG7XA",
-// 		SecretKey: "zM9IBfwgyfleyy2QFT1mHR+W3SIuWHVZUii9iX4E",
-// 	}}
-
-// 	resp, err := Client.Do(r)
-// 	if err != nil {
-// 		log.Fatal(err)
-// 	}
-
-// 	defer resp.Body.Close()
-
-// 	out, err := os.Create("voice.mp3")
-
-// 	if err != nil {
-// 		panic(err)
-// 	}
-
-// 	defer out.Close()
-
-// 	fmt.Println(resp)
-// 	fmt.Println(resp.Body)
-
-// 	io.Copy(out, resp.Body)
-// }
