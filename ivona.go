@@ -1,3 +1,4 @@
+// Package ivona provides the binding for IVONA Speech Cloud API
 package ivona
 
 import (

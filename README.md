@@ -1,6 +1,6 @@
 # Go IVONA [![Build Status](https://travis-ci.org/jpadilla/ivona-go.svg?branch=master)](https://travis-ci.org/jpadilla/ivona-go)
 
-Go client library for [IVONA](http://www.ivona.com/us/).
+Go client library for [IVONA Speech Cloud API](http://www.ivona.com/us/).
 
 ## Supported API Calls
 
