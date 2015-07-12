@@ -7,6 +7,13 @@ type SpeechResponse struct {
 	ContentType string
 }
 
+// ListResponse is the resource representing response from ListVoices action.
+type ListResponse struct {
+	Voices      []Voice
+	RequestID   string
+	ContentType string
+}
+
 // SpeechOptions is the set of parameters that can be used on the CreateSpeech action.
 // For more details see http://developer.ivona.com/en/speechcloud/api_ref_actions.html#CreateSpeech.
 type SpeechOptions struct {

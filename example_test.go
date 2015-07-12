@@ -19,3 +19,14 @@ func ExampleIvona_CreateSpeech() {
 	log.Printf("%v\n", r.ContentType)
 	log.Printf("%v\n", r.RequestID)
 }
+
+func ExampleIvona_ListVoices() {
+	client := ivona.New("IVONA_ACCESS_KEY", "IVONA_SECRET_KEY")
+
+	r, err := client.ListVoices(ivona.Voice{})
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	log.Printf("%v\n", len(r.Voices))
+}
