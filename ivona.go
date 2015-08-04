@@ -15,6 +15,7 @@ const ivonaAPI = "https://tts.eu-west-1.ivonacloud.com"
 
 // createSpeechAPI is the public API IVONA Speech Cloud URL for the CreateSpeech action.
 const createSpeechAPI = ivonaAPI + "/CreateSpeech"
+const listVoicesAPI = ivonaAPI + "/ListVoices"
 
 // Ivona is used to invoke API calls
 type Ivona struct {
@@ -66,4 +67,47 @@ func (client *Ivona) CreateSpeech(options SpeechOptions) (*SpeechResponse, error
 		RequestID:   resp.Header["X-Amzn-Ivonattsrequestid"][0],
 		ContentType: resp.Header["Content-Type"][0],
 	}, nil
+}
+
+// ListVoices retrieves list of voices from the api
+func (client *Ivona) ListVoices(options Voice) (*ListResponse, error) {
+	b, err := json.Marshal(options)
+	if err != nil {
+		return nil, err
+	}
+
+	r, _ := http.NewRequest("POST", listVoicesAPI, bytes.NewReader(b))
+	r.Header.Set("Content-Type", "application/json")
+
+	awsClient := aws4.Client{Keys: &aws4.Keys{
+		AccessKey: client.AccessKey,
+		SecretKey: client.SecretKey,
+	}}
+
+	resp, err := awsClient.Do(r)
+	if err != nil {
+		return nil, err
+	}
+
+	defer resp.Body.Close()
+
+	data, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	if resp.StatusCode != 200 {
+		return nil, fmt.Errorf("Got non 200 status code: %s %q", resp.Status, data)
+	}
+
+	list := new(ListResponse)
+	err = json.Unmarshal(data, list)
+	if err != nil {
+		return nil, err
+	}
+
+	list.RequestID = resp.Header["X-Amzn-Ivonattsrequestid"][0]
+	list.ContentType = resp.Header["Content-Type"][0]
+
+	return list, nil
 }

@@ -40,3 +40,24 @@ func TestIvona_CreateSpeech(t *testing.T) {
 		t.Errorf("Audio length %v does not match", audioLength)
 	}
 }
+
+func TestIvona_ListVoices(t *testing.T) {
+	client := ivona.New(ivonaAccessKey, ivonaSecretKey)
+
+	r, err := client.ListVoices(ivona.Voice{})
+	if err != nil {
+		t.Error(err)
+	}
+
+	voicesLength := len(r.Voices)
+	expectedVoicesLength := 51
+	expectedContentType := "application/json"
+
+	if voicesLength != expectedVoicesLength {
+		t.Errorf("Voices length %v does not match", len(r.Voices))
+	}
+
+	if r.ContentType != expectedContentType {
+		t.Errorf("ContentType %v does not match", r.ContentType)
+	}
+}
