@@ -58,4 +58,16 @@ func TestIvona_ListVoices(t *testing.T) {
 	if r.ContentType != expectedContentType {
 		t.Errorf("ContentType %v does not match", r.ContentType)
 	}
+
+	r, err = client.ListVoices(Voice{ Gender: "Female" })
+	if err != nil {
+		t.Error(err)
+	}
+
+	voicesLength = len(r.Voices)
+	allVoicesLength := expectedVoicesLength
+
+	if voicesLength == allVoicesLength {
+		t.Errorf("Voices length %v is larger than expected", len(r.Voices))
+	}
 }
