@@ -1,10 +1,8 @@
-package ivona_test
+package ivona
 
 import (
 	"os"
 	"testing"
-
-	ivona "github.com/jpadilla/ivona-go"
 )
 
 var (
@@ -20,8 +18,8 @@ func init() {
 }
 
 func TestIvona_CreateSpeech(t *testing.T) {
-	client := ivona.New(ivonaAccessKey, ivonaSecretKey)
-	options := ivona.NewSpeechOptions(testText)
+	client := New(ivonaAccessKey, ivonaSecretKey)
+	options := NewSpeechOptions(testText)
 	r, err := client.CreateSpeech(options)
 
 	if err != nil {
@@ -42,9 +40,9 @@ func TestIvona_CreateSpeech(t *testing.T) {
 }
 
 func TestIvona_ListVoices(t *testing.T) {
-	client := ivona.New(ivonaAccessKey, ivonaSecretKey)
+	client := New(ivonaAccessKey, ivonaSecretKey)
 
-	r, err := client.ListVoices(ivona.Voice{})
+	r, err := client.ListVoices(Voice{})
 	if err != nil {
 		t.Error(err)
 	}
@@ -59,5 +57,17 @@ func TestIvona_ListVoices(t *testing.T) {
 
 	if r.ContentType != expectedContentType {
 		t.Errorf("ContentType %v does not match", r.ContentType)
+	}
+
+	r, err = client.ListVoices(Voice{ Gender: "Female" })
+	if err != nil {
+		t.Error(err)
+	}
+
+	voicesLength = len(r.Voices)
+	allVoicesLength := expectedVoicesLength
+
+	if voicesLength == allVoicesLength {
+		t.Errorf("Voices length %v is larger than expected", len(r.Voices))
 	}
 }

@@ -71,7 +71,16 @@ func (client *Ivona) CreateSpeech(options SpeechOptions) (*SpeechResponse, error
 
 // ListVoices retrieves list of voices from the api
 func (client *Ivona) ListVoices(options Voice) (*ListResponse, error) {
-	b, err := json.Marshal(options)
+	voiceOptions := struct {
+		Gender 	 string `json:",omitempty"`
+		Language string `json:",omitempty"`
+		Name 	 string `json:",omitempty"`
+	}{}
+	voiceOptions.Gender = options.Gender
+	voiceOptions.Language = options.Language
+	voiceOptions.Name = options.Name
+
+	b, err := json.Marshal(map[string]interface{}{ "Voice": voiceOptions })
 	if err != nil {
 		return nil, err
 	}
