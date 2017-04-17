@@ -3,7 +3,7 @@ package ivona_test
 import (
 	"log"
 
-	ivona "github.com/jpadilla/ivona-go"
+	ivona "github.com/omie/ivona-go"
 )
 
 func ExampleIvona_CreateSpeech() {

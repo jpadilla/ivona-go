@@ -4,7 +4,7 @@ import (
 	"os"
 	"testing"
 
-	ivona "github.com/jpadilla/ivona-go"
+	ivona "github.com/omie/ivona-go"
 )
 
 var (
